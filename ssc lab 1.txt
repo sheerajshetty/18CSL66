@@ -1,0 +1,32 @@
+%{
+#include<stdio.h>
+int v=0,op=0,id=0,flag=0;
+%}
+
+%%
+[a-zA-Z]+[0-9a-zA-Z]*  {id++;}
+[0-9]+  {id++;}
+[\+\-\*/\=]  {op++;}
+"("  {v++;}
+")"  {v--;}
+";" {flag=1;}
+.|\n {return 0;}
+%%
+
+int main()
+{
+printf("enter the expression:");
+yylex();
+if((op+1)==id && v==0  && flag==0)
+{
+printf("\nexpression is valid\n");
+printf("no of identifier=%d\n no of operators=%d\n",id,op);
+}
+else
+printf("\nexpression is invalid\n");
+return 0;
+}
+int yywrap()
+{
+return 1;
+}

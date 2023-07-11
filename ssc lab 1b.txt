@@ -1,0 +1,49 @@
+/lex part/
+%option noyywrap
+%{
+#include "y.tab.h"
+extern int yylval;
+%}
+
+%%
+[0-9]+    {yylval=atoi(yytext);return num;}
+[\+\-\*\/]  {return yytext[0];}
+[)]         {return yytext[0];}
+[(]         {return yytext[0];}
+.           {;}
+\n          {return 0;}
+%%
+
+/yacc part/
+
+%{
+#include<stdio.h>
+#include<stdlib.h>
+int yyerror();
+int yylex();
+%}
+
+%token num
+%left '+''-'
+%left'*''/'
+
+%%
+input:exp {printf("%d\n",$$);exit(0);}
+exp:  exp'+'exp {$$=$1+$3;}
+     |exp'-'exp {$$=$1-$3;}
+     |exp''exp {$$=$1$3;}
+     |exp'/'exp {if($3==0){printf("divide by zero.invalid expression.\n");exit(0);}
+     else $$=$1/$3;}
+     |'('exp')'{$$=$2;}
+     |num{$$=$1;};
+%%
+int yyerror()
+{
+printf("error:invalid expression.\n");
+exit(0);
+}
+int main()
+{
+printf("enter an expression:\n");
+yyparse();
+}

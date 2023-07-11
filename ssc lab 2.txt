@@ -1,0 +1,37 @@
+%option noyywrap
+%{
+#include "y.tab.h"
+%}
+%%
+a   {return A;}
+b   {return B;}
+[\n] return'\n';
+%%
+
+
+
+
+
+%{
+#include<stdio.h>
+#include<stdlib.h>
+int yyerror();
+int yylex();
+%}
+%token A B
+%%
+input : s'\n' {printf("sucessful grammer\n");exit(0);}
+        s:A s1 B|B
+        s1: ;|A s1
+%%
+int main()
+{
+printf("\nenter a string\n");
+yyparse();
+return 0;
+}
+int yyerror()
+{
+printf("\nError \n");
+exit(0);
+}
